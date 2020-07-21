@@ -1,9 +1,10 @@
 using JAnki
+using HTTP
 
-cards = anki_get_tag("transfer")["result"]
+cards = JAnki.anki_get_tag("transfer")["result"]
 
 for card in cards
-           card_info = anki_get_card(card)["result"][1]
+           card_info = JAnki.anki_get_card(card)["result"][1]
            println(card_info["noteId"])
            for key in keys(card_info["fields"])
                println("$key:")
@@ -13,4 +14,3 @@ for card in cards
            println("\n\n")
        end
 
-print(test)
