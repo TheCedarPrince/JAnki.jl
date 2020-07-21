@@ -1,5 +1,9 @@
+
+module JAnki
+
 using HTTP
 using JSON
+
 
 function anki_get_tag(tag)
 	response = HTTP.request(:POST, "http://localhost:8765", [], """{
@@ -28,3 +32,4 @@ function anki_get_card(card_id)
 	JSON.parse(String(response.body))
 end
 
+end
