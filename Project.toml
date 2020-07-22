@@ -1,7 +1,7 @@
 name = "JAnki"
 uuid = "b1ac8954-8255-46c5-9ff1-c7a9d9ef24f1"
 authors = ["jacobzelko"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 Gumbo = "708ec375-b3d6-5a57-a7ce-8257bf98657a"
