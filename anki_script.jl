@@ -1,7 +1,7 @@
 using JAnki
 using HTTP
 
-cards = JAnki.anki_get_tag("transfer")["result"]
+cards = JAnki.anki_find_notes("transfer")["result"]
 
 for card in cards
            card_info = JAnki.anki_get_card(card)["result"][1]

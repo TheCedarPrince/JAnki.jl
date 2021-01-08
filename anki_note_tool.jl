@@ -3,7 +3,7 @@ using REPL.TerminalMenus
 
 function main()
 
-card = JAnki.anki_get_tag("transfer")["result"][1]
+card = JAnki.anki_find_notes("transfer")["result"][1]
 
 card_dict = Dict()
 
