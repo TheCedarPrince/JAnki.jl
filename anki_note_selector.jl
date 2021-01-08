@@ -2,9 +2,19 @@ using JAnki
 using REPL.TerminalMenus
 using Base: prompt, run
 
-function note_selector(tag, toclip, )
+"""
 
-    cards = anki_get_tag("transfer")["result"]
+note_selector(tag::String, retag::String, toclip::Bool)
+
+"""
+function note_selector(tag::String, retag::String, toclip::Bool)
+
+    cards = anki_find_notes("$tag")["result"]
+
+    if length(cards) == 0
+        println("No cards found that match \"$(tag)\". Exiting program")
+	return 0
+    end
 
     check_card = anki_get_card(cards[1])["result"][1]
     field_list = check_card["fields"] |> keys |> collect
@@ -14,7 +24,7 @@ function note_selector(tag, toclip, )
     selections = field_list[selections.dict |> keys |> collect]
     run(`clear`)
 
-    for card in cards
+    for (num, card) in enumerate(cards)
         card = anki_get_card(card)["result"][1]
         card_id = card["noteId"]
         field_list = card["fields"] |> keys |> collect
@@ -36,23 +46,31 @@ function note_selector(tag, toclip, )
                 card_info = card_info * content
             end
         end
+        println("Card $num of $(length(cards))")
 
-        clipboard(card_info)
-        prompt("When ready for the next note, press ENTER")
-        run(`clear`)
-
+        if toclip
+            clipboard(card_info)
+            anki_retag_note(tag, retag, card_id)
+            prompt("When ready for the next note, press ENTER")
+            run(`clear`)
+        end
     end
 end
 
-function anki_retag_note(tag, retag)
-        println("Would you like to remove $tag and retag it $retag?")
-        choice = RadioMenu(["Yes", "No"], pagesize = 2) |> request
+"""
 
-        if choice == 1
-            anki_add_tag(card_id, "done")
-            anki_remove_tag(card_id, "transfer")
-        end
+anki_retag_note(tag::String, retag::String, card_id::String)
+
+"""
+function anki_retag_note(tag, retag, card_id)
+    println("Would you like to remove \"$tag\" and from this card and retag it \"$retag\"?")
+    choice = RadioMenu(["Yes", "No"], pagesize = 2) |> request
+
+    if choice == 1
+        anki_add_tag(card_id, "$retag")
+        anki_remove_tag(card_id, "$tag")
+    end
 end
 
-function main()
-main()
+note_selector("transfer", "done", true)
+println("No more cards to review! Hooray!!! 🎉 🎉 🎉")
