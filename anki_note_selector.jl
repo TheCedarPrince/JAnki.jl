@@ -16,7 +16,7 @@ function note_selector(tag::String, retag::String, toclip::Bool)
 	return 0
     end
 
-    check_card = anki_get_card(cards[1])["result"][1]
+    check_card = anki_get_card([cards[1]])["result"][1]
     field_list = check_card["fields"] |> keys |> collect
 
     println("Select what fields you wish to query from these cards:")
@@ -25,7 +25,7 @@ function note_selector(tag::String, retag::String, toclip::Bool)
     run(`clear`)
 
     for (num, card) in enumerate(cards)
-        card = anki_get_card(card)["result"][1]
+        card = anki_get_card([card])["result"][1]
         card_id = card["noteId"]
         field_list = card["fields"] |> keys |> collect
 
