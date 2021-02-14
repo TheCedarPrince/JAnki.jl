@@ -7,16 +7,16 @@ using Base: prompt, run
 note_selector(tag::String, retag::String, toclip::Bool)
 
 """
-function note_selector(tag::String, retag::String, toclip::Bool)
+function note_selector(tags::Array, retag::String, toclip::Bool)
 
-    cards = anki_find_notes("$tag")["result"]
+    cards = anki_find_notes(tags)["result"]
 
     if length(cards) == 0
-        println("No cards found that match \"$(tag)\". Exiting program")
+        println("No cards found that match \"$(tags)\". Exiting program")
 	return 0
     end
 
-    check_card = anki_get_card([cards[1]])["result"][1]
+    check_card = anki_get_card([cards[1]])[1]
     field_list = check_card["fields"] |> keys |> collect
 
     println("Select what fields you wish to query from these cards:")
@@ -25,7 +25,7 @@ function note_selector(tag::String, retag::String, toclip::Bool)
     run(`clear`)
 
     for (num, card) in enumerate(cards)
-        card = anki_get_card([card])["result"][1]
+        card = anki_get_card([card])[1]
         card_id = card["noteId"]
         field_list = card["fields"] |> keys |> collect
 
@@ -50,7 +50,7 @@ function note_selector(tag::String, retag::String, toclip::Bool)
 
         if toclip
             clipboard(card_info)
-            anki_retag_note(tag, retag, card_id)
+            anki_retag_note(tags, retag, card_id)
             prompt("When ready for the next note, press ENTER")
             run(`clear`)
         end
@@ -63,7 +63,7 @@ anki_retag_note(tag::String, retag::String, card_id::String)
 
 """
 function anki_retag_note(tag, retag, card_id)
-    println("Would you like to remove \"$tag\" and from this card and retag it \"$retag\"?")
+    println("Would you like to remove $tag and from this card and retag it \"$retag\"?")
     choice = RadioMenu(["Yes", "No"], pagesize = 2) |> request
 
     if choice == 1
@@ -72,5 +72,5 @@ function anki_retag_note(tag, retag, card_id)
     end
 end
 
-note_selector("transfer", "done", true)
+note_selector(["transfer"], "done", true)
 println("No more cards to review! Hooray!!! 🎉 🎉 🎉")
