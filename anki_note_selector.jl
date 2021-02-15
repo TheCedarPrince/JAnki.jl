@@ -7,13 +7,17 @@ using Base: prompt, run
 note_selector(tag::String, retag::String, toclip::Bool)
 
 """
-function note_selector(tags::Array, retag::String, toclip::Bool)
+function note_selector(;tags::Array, retag::String, toclip::Bool, strict::Bool)
+    if strict == true
+        cards = anki_find_note(first(tags))["result"]
+    else
+        cards = anki_find_notes(tags)["result"]
+    end
 
-    cards = anki_find_notes(tags)["result"]
 
     if length(cards) == 0
         println("No cards found that match \"$(tags)\". Exiting program")
-	return 0
+        return 0
     end
 
     check_card = anki_get_card([cards[1]])[1]
@@ -72,5 +76,5 @@ function anki_retag_note(tag, retag, card_id)
     end
 end
 
-note_selector(["transfer"], "done", true)
+note_selector(tags = ["transfer"], retag = "done", toclip = true, strict = true)
 println("No more cards to review! Hooray!!! 🎉 🎉 🎉")
