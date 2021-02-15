@@ -2,13 +2,42 @@
 
 anki_find_notes(tag::Array)
 
-This 
+This
 
 """
 function anki_find_notes(tag::Array)
     tag_query = ""
-    for t in tag 
-    	tag_query = tag_query * " tag:$t"
+    for t in tag
+        tag_query = tag_query * " tag:$t"
+    end
+    response = HTTP.request(
+        :POST,
+        "http://localhost:8765",
+        [],
+        """{
+\"action\": \"findNotes\",
+\"version\": 6,
+\"params\": {
+	\"query\": \"$tag_query\"
+	}
+}""",
+    )
+    String(response.body) |> JSON.parse
+end
+
+"""
+
+anki_find_note(tag::String)
+
+This
+
+"""
+function anki_find_note(tag::String)
+    tags = anki_get_tags()
+    findfirst(==(tag), tags) |> ind -> deleteat!(tags, ind)
+    tag_query = "tag:$tag"
+    for t in tags
+        tag_query = tag_query * " -tag:$t"
     end
     response = HTTP.request(
         :POST,
