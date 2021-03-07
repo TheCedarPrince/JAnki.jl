@@ -76,5 +76,5 @@ function anki_retag_note(tag, retag, card_id)
     end
 end
 
-note_selector(tags = ["transfer"], retag = "done", toclip = true, strict = true)
+note_selector(tags = ["gtri", "transfer"], retag = "done", toclip = true, strict = false)
 println("No more cards to review! Hooray!!! 🎉 🎉 🎉")
