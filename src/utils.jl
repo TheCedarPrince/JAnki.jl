@@ -61,6 +61,11 @@ anki_remove_tag(card_id::Int, tag::String)
 
 """
 function anki_remove_tag(card_id, tag)
+    tag_query = ""
+    for t in tag
+        tag_query = tag_query * "$t "
+    end
+
     if length(card_id) == 1
         card_id = "[$card_id]"
     end
@@ -70,13 +75,13 @@ function anki_remove_tag(card_id, tag)
         "http://localhost:8765",
         [],
         """{
-\"action\": \"removeTags\",
-\"version\": 6,
-\"params\": {
-	\"notes\": $card_id,
-	\"tags\": \"$tag\"
-	}
-}""",
+       \"action\": \"removeTags\",
+       \"version\": 6,
+       \"params\": {
+       	\"notes\": $card_id,
+       	\"tags\": \"$tag_query\"
+       	}
+       }""",
     )
     String(response.body) |> JSON.parse
 end

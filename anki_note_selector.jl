@@ -66,13 +66,13 @@ end
 anki_retag_note(tag::String, retag::String, card_id::String)
 
 """
-function anki_retag_note(tag, retag, card_id)
-    println("Would you like to remove $tag and from this card and retag it \"$retag\"?")
+function anki_retag_note(tags, retag, card_id)
+    println("Would you like to remove $tags and from this card and retag it \"$retag\"?")
     choice = RadioMenu(["Yes", "No"], pagesize = 2) |> request
 
     if choice == 1
         anki_add_tag(card_id, "$retag")
-        anki_remove_tag(card_id, "$tag")
+        anki_remove_tag(card_id, tags)
     end
 end
 
